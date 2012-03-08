@@ -5,6 +5,7 @@
 #include <sys/epoll.h>
 #include <netinet/in.h>
 #include <sys/cdefs.h>
+#include <libgen.h>
 
 #include <lua.h>
 #include <lualib.h>
@@ -30,17 +31,59 @@ static int apkg_check_lua_err(lua_State* L, int status)
 	return status;
 }
 
-static char initstr[] = "
-print ''
-";
+void apkg_stack_dump (lua_State *L) {
+      int i;
+      int top = lua_gettop(L);
+      for (i = 1; i <= top; i++) {  /* repeat for each level */
+        int t = lua_type(L, i);
+        switch (t) {
+    
+          case LUA_TSTRING:  /* strings */
+            printf("`%s'", lua_tostring(L, i));
+            break;
+    
+          case LUA_TBOOLEAN:  /* booleans */
+            printf(lua_toboolean(L, i) ? "true" : "false");
+            break;
+    
+          case LUA_TNUMBER:  /* numbers */
+            printf("%g", lua_tonumber(L, i));
+            break;
+    
+          default:  /* other values */
+            printf("%s", lua_typename(L, t));
+            break;
+    
+        }
+        printf("  ");  /* put a separator */
+      }
+      printf("\n");  /* end the listing */
+    }
+
+static char initstr[] = "dofile('init.lua');";
 
 int main(int argc, char **argv)
 {
-	lua_State *l = luaL_newstate();
+	lua_State *L = luaL_newstate();
+	luaL_openlibs(L);
 	//Okay, first we need to find out our name
 	char* applet = basename(argv[0]);
+	printf("applet: %s\n", applet);
 	lua_pushstring(L, applet);
-	lua_setfield(L, -2, "apkg_applet");
+	lua_setglobal(L, "apkg_applet");
+	
+	int error = luaL_loadbuffer(L, initstr, strlen(initstr), "apkg") ||
+            lua_pcall(L, 0, 0, 0);
+	apkg_check_lua_err(L,error);
+	
+	lua_getglobal(L, "apkg_result");
+    if (!lua_isnumber(L, -1)) {
+        printf ("apkg: `apkg_result' should be a number\n");
+        return -1;
+    }
+    int r = lua_tonumber(L,-1);
+	printf("apkg: result is %d\n",r);
+	return r;
 	
 }
 
