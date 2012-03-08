@@ -8,10 +8,25 @@
 -- set apkg_result to the required return code
 apkg_result=1
 
--- example help implementation
-applets_help={
-['apkg'] = "This utility should not be called directly, use apkg-* instead",
-['apkg-install'] = "install packages...",
-}
+common_help = "(c) AgiliaLinux Developers 2012, Some rights reserved";
 
-print(applets_help[apkg_applet]);
+
+applets={};
+
+function register_applet(applet)
+	print("Registering applet "..applet['name']);
+	applets[applet['name']]=applet;
+end
+
+applet_apkg = {
+	name = 'apkg';
+	help = "This utility should not be called directly, use apkg-* instead",
+	minargs = 0;
+	applet = function()
+	print(applet_apkg['help'])
+end
+}
+register_applet(applet_apkg);
+
+applets[apkg_applet]
+print(applets[apkg_applet]['help']);
