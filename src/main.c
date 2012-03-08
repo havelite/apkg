@@ -79,8 +79,6 @@ int main(int argc, char **argv)
 	lua_setglobal(L, "apkg_applet");
 	lua_pushnumber(L, argc);
 	lua_setglobal(L, "apkg_argc");
-	apkg_stack_dump(L);
-	
 	//Now, we need to send the rest of argv directly to lua
 	int i;
 	lua_newtable(L);
@@ -102,7 +100,6 @@ int main(int argc, char **argv)
     int r = lua_tonumber(L,-1);
 	printf("apkg: result is %d\n",r);
 	return r;
-	
 }
 
 
