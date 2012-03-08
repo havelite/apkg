@@ -5,10 +5,8 @@
 -- a table of args apkg_args
 
 
--- set apkg_result to the required return code
-apkg_result=0
-
-common_help = "(c) AgiliaLinux Developers 2012, Some rights reserved";
+-- set apkg_result to the required return code, 0 by default
+apkg_result=0 
 
 
 applets={};
@@ -27,7 +25,7 @@ applet_apkg = {
 	name = 'apkg';
 	help = "This utility should not be called directly, use apkg-* instead",
 	minargs = 0;
-	applet = function(args)
+	applet = function()
 		-- apkg does nothing by default
 		print("APKG :: AgiliaLinux Package Manager");
 		print(applet_apkg['help'])
@@ -38,4 +36,4 @@ applet_apkg = {
 
 -- TODO: send the rest of argv to lua
 register_applet(applet_apkg);
-applets[apkg_applet]['applet'](nil);
+applets[apkg_applet]['applet']();

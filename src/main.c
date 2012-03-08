@@ -62,6 +62,12 @@ void apkg_stack_dump (lua_State *L) {
 
 static char initstr[] = "dofile('init.lua');";
 
+static void lua_pusharraystring(lua_State* L , int key , char* value) {
+    lua_pushnumber(L, key);
+    lua_pushstring(L, value);
+    lua_settable(L, -3);
+} 
+
 int main(int argc, char **argv)
 {
 	lua_State *L = luaL_newstate();
@@ -71,6 +77,18 @@ int main(int argc, char **argv)
 	printf("applet: %s\n", applet);
 	lua_pushstring(L, applet);
 	lua_setglobal(L, "apkg_applet");
+	lua_pushnumber(L, argc);
+	lua_setglobal(L, "apkg_argc");
+	apkg_stack_dump(L);
+	
+	//Now, we need to send the rest of argv directly to lua
+	int i;
+	lua_newtable(L);
+	for (i=1;i<argc; i++)
+	{
+		lua_pusharraystring(L,i, argv[i]);
+	}
+	lua_setglobal(L, "apkg_argv");
 	
 	int error = luaL_loadbuffer(L, initstr, strlen(initstr), "apkg") ||
             lua_pcall(L, 0, 0, 0);
