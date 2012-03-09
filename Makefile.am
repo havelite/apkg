@@ -1,1 +1,2 @@
+APKG_DEFS = @DEFS@
 SUBDIRS = src

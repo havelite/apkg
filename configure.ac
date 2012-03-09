@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.68])
-AC_INIT([azracore], [0.1], [azrabugs@necromant.ath.cx])
+AC_INIT([apkg], [0.1], [apkgbugs@necromant.ath.cx])
 AM_INIT_AUTOMAKE
 AC_CONFIG_SRCDIR([include/config.h.in])
 AC_CONFIG_HEADERS([include/config.h])

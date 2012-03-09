@@ -60,7 +60,8 @@ void apkg_stack_dump (lua_State *L) {
       printf("\n");  /* end the listing */
     }
 
-static char initstr[] = "dofile('init.lua');";
+#define DATA "test"
+static char initstr[] = "dofile('" APKG_DATA "init.lua');";
 
 static void lua_pusharraystring(lua_State* L , int key , char* value) {
     lua_pushnumber(L, key);
